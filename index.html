@@ -8,12 +8,11 @@
   <meta name="description" content="Drgoblin's official domain. Experience the chaos of falling drgoblins, immersive sound, and Drgoblin’s rise. Enter the world of Drgoblin." />
   <meta name="robots" content="index, follow" />
 
-<!-- /*********************************************************************
-Why are you looking at my page, fuck off, this is Drgoblin's Domain.
+  <!-- /*********************************************************************
+  Why are you looking at my page, fuck off, this is Drgoblin's Domain.
 
-Snow Effect Script- By your mum
-*********************************************************************/ -->
-
+  Snow Effect Script- By your mum
+  *********************************************************************/ -->
 
   <style>
     html, body {
@@ -71,7 +70,12 @@ Snow Effect Script- By your mum
 
 <script>
   (() => {
-    const goblinCount = 100;
+    // Determine if the device is mobile by viewport width
+    const isMobile = window.innerWidth <= 768;
+
+    // Set number of goblins: fewer on mobile for performance
+    const goblinCount = isMobile ? 30 : 100;
+
     const goblins = [];
     const container = document.body;
     const imgSrc = 'femalegoblinfalls.png';
@@ -85,10 +89,13 @@ Snow Effect Script- By your mum
       gob.alt = "Drgoblin falling through darkness";
       gob.className = 'goblin';
 
+      // Calculate horizontal position with spacing and random offset
       const spacing = viewportWidth / goblinCount;
       const baseX = i * spacing;
       const xOffset = Math.random() * (spacing - 200);
-      const x = Math.max(0, baseX + xOffset - 150);
+      const x = Math.max(0, baseX + xOffset - 150); // Shift left but keep inside viewport
+
+      // Vertical position randomly distributed over viewport height
       const y = Math.random() * viewportHeight - 100;
 
       gob.style.left = `${x}px`;
@@ -99,10 +106,10 @@ Snow Effect Script- By your mum
         element: gob,
         x: x,
         y: y,
-        amplitude: Math.random() * 40,
-        dx: 0,
-        stx: 0.005 + Math.random() / 20,
-        sty: 0.5 + Math.random() * 1.2
+        amplitude: Math.random() * 40,  // Side to side oscillation amplitude
+        dx: 0,                         // Angle for sine wave
+        stx: 0.005 + Math.random() / 20, // Side to side speed
+        sty: 0.5 + Math.random() * 1.2  // Falling speed
       });
     }
 
@@ -111,20 +118,22 @@ Snow Effect Script- By your mum
       viewportHeight = window.innerHeight;
 
       goblins.forEach(goblin => {
-        goblin.y += goblin.sty;
-        if (goblin.y > viewportHeight + 100) {
+        goblin.y += goblin.sty; // Move down
+
+        if (goblin.y > viewportHeight + 100) { // Reset to top after falling below viewport
           goblin.y = -200;
-          goblin.stx = 0.005 + Math.random() / 50;
-          goblin.sty = 0.5 + Math.random() * 1.2;
+          goblin.stx = 0.005 + Math.random() / 50; // Randomize horizontal speed on reset
+          goblin.sty = 0.5 + Math.random() * 1.2;  // Randomize vertical speed on reset
         }
 
-        goblin.dx += goblin.stx;
-        const xPos = goblin.x + goblin.amplitude * Math.sin(goblin.dx);
+        goblin.dx += goblin.stx; // Update horizontal sine wave position
+        const xPos = goblin.x + goblin.amplitude * Math.sin(goblin.dx); // Calculate new horizontal position
+
         goblin.element.style.left = `${xPos}px`;
         goblin.element.style.top = `${goblin.y}px`;
       });
 
-      requestAnimationFrame(animate);
+      requestAnimationFrame(animate); // Smooth animation
     }
 
     window.addEventListener('load', animate);
