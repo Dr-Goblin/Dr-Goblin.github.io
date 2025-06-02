@@ -8,23 +8,20 @@
   <meta name="description" content="Drgoblin's official domain. Experience the chaos of falling drgoblins, immersive sound, and Drgoblin’s rise. Enter the world of Drgoblin." />
   <meta name="robots" content="index, follow" />
 
-  <!-- /*********************************************************************
-  Why are you looking at my page, fuck off, this is Drgoblin's Domain.
-
-  Snow Effect Script- By your mum
-  *********************************************************************/ -->
-
   <style>
     html, body {
       margin: 0;
       padding: 0;
       overflow: hidden;
-      background: url('goblinback.jpg') no-repeat center center fixed;
+      background: url('goblinback.webp') no-repeat center center fixed;
       background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
       font-family: Verdana, Arial, Helvetica, sans-serif;
       color: #fff;
       height: 100vh;
       width: 100vw;
+      min-width: 320px;
     }
     #playBtn {
       position: fixed;
@@ -48,13 +45,25 @@
       z-index: 1000;
       image-rendering: optimizeSpeed;
     }
+
+    @media (max-width: 768px) {
+      html, body {
+        background-attachment: scroll;
+      }
+    }
   </style>
 </head>
+
+<!-- /*********************************************************************
+Why are you looking at my page, fuck off, this is Drgoblin's Domain.
+
+Snow Effect Script- By your mum
+*********************************************************************/ -->
+
 <body>
 
 <h1 style="position:absolute;left:-9999px;">Drgoblin - The Official drgoblin Experience</h1>
 
-<!-- Play button to start audio -->
 <button id="playBtn" aria-label="Play Drgoblin's Rise Sound">
   Click HERE to make Drgoblin rise
 </button>
@@ -70,32 +79,29 @@
 
 <script>
   (() => {
-    // Determine if the device is mobile by viewport width
     const isMobile = window.innerWidth <= 768;
-
-    // Set number of goblins: fewer on mobile for performance
     const goblinCount = isMobile ? 30 : 100;
-
     const goblins = [];
     const container = document.body;
-    const imgSrc = 'femalegoblinfalls.png';
+
+    // Use WebP images
+    const imgSrcDesktop = 'femalegoblinfalls.webp';
+    const imgSrcMobile = 'femalegoblinfalls-small.webp';
 
     let viewportWidth = window.innerWidth;
     let viewportHeight = window.innerHeight;
 
     for (let i = 0; i < goblinCount; i++) {
       const gob = document.createElement('img');
-      gob.src = imgSrc;
       gob.alt = "Drgoblin falling through darkness";
       gob.className = 'goblin';
+      gob.src = isMobile ? imgSrcMobile : imgSrcDesktop;
 
-      // Calculate horizontal position with spacing and random offset
       const spacing = viewportWidth / goblinCount;
       const baseX = i * spacing;
       const xOffset = Math.random() * (spacing - 200);
-      const x = Math.max(0, baseX + xOffset - 150); // Shift left but keep inside viewport
+      const x = Math.max(0, baseX + xOffset - 150);
 
-      // Vertical position randomly distributed over viewport height
       const y = Math.random() * viewportHeight - 100;
 
       gob.style.left = `${x}px`;
@@ -106,10 +112,10 @@
         element: gob,
         x: x,
         y: y,
-        amplitude: Math.random() * 40,  // Side to side oscillation amplitude
-        dx: 0,                         // Angle for sine wave
-        stx: 0.005 + Math.random() / 20, // Side to side speed
-        sty: 0.5 + Math.random() * 1.2  // Falling speed
+        amplitude: Math.random() * 40,
+        dx: 0,
+        stx: isMobile ? 0.02 + Math.random() / 20 : 0.005 + Math.random() / 20,
+        sty: isMobile ? 1 + Math.random() * 1.5 : 0.5 + Math.random() * 1.2
       });
     }
 
@@ -118,22 +124,19 @@
       viewportHeight = window.innerHeight;
 
       goblins.forEach(goblin => {
-        goblin.y += goblin.sty; // Move down
-
-        if (goblin.y > viewportHeight + 100) { // Reset to top after falling below viewport
+        goblin.y += goblin.sty;
+        if (goblin.y > viewportHeight + 100) {
           goblin.y = -200;
-          goblin.stx = 0.005 + Math.random() / 50; // Randomize horizontal speed on reset
-          goblin.sty = 0.5 + Math.random() * 1.2;  // Randomize vertical speed on reset
+          goblin.stx = isMobile ? 0.02 + Math.random() / 20 : 0.005 + Math.random() / 20;
+          goblin.sty = isMobile ? 1 + Math.random() * 1.5 : 0.5 + Math.random() * 1.2;
         }
-
-        goblin.dx += goblin.stx; // Update horizontal sine wave position
-        const xPos = goblin.x + goblin.amplitude * Math.sin(goblin.dx); // Calculate new horizontal position
-
+        goblin.dx += goblin.stx;
+        const xPos = goblin.x + goblin.amplitude * Math.sin(goblin.dx);
         goblin.element.style.left = `${xPos}px`;
         goblin.element.style.top = `${goblin.y}px`;
       });
 
-      requestAnimationFrame(animate); // Smooth animation
+      requestAnimationFrame(animate);
     }
 
     window.addEventListener('load', animate);
