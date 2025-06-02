@@ -3,9 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Even the Drgoblin Falls - Official Drgoblin's Domain</title>
-  <meta name="description" content="Welcome to Drgoblin's Domain. Experience the dark magic with falling goblins, immersive sound, and unique visuals." />
+  
+  <title>Drgoblin | Even the Drgoblin Falls</title>
+  <meta name="description" content="Drgoblin's official domain. Experience the chaos of falling drgoblins, immersive sound, and Drgoblin’s rise. Enter the world of Drgoblin." />
   <meta name="robots" content="index, follow" />
+
+<!-- /*********************************************************************
+Why are you looking at my page, fuck off, this is Drgoblin's Domain.
+
+Snow Effect Script- By your mum
+*********************************************************************/ -->
+
+
   <style>
     html, body {
       margin: 0;
@@ -15,6 +24,8 @@
       background-size: cover;
       font-family: Verdana, Arial, Helvetica, sans-serif;
       color: #fff;
+      height: 100vh;
+      width: 100vw;
     }
     #playBtn {
       position: fixed;
@@ -28,16 +39,23 @@
       border: none;
       border-radius: 3px;
       cursor: pointer;
+      user-select: none;
+    }
+    .goblin {
+      position: absolute;
+      width: 350px;
+      height: auto;
+      pointer-events: none;
+      z-index: 1000;
+      image-rendering: optimizeSpeed;
     }
   </style>
 </head>
 <body>
 
-<!-- /*********************************************************************
-* Why are you looking at my page, fuck off, this is Drgoblin's Domain. *
-* Snow Effect Script - By your mum                                       *
-*********************************************************************/ -->
+<h1 style="position:absolute;left:-9999px;">Drgoblin - The Official drgoblin Experience</h1>
 
+<!-- Play button to start audio -->
 <button id="playBtn" aria-label="Play Drgoblin's Rise Sound">
   Click HERE to make Drgoblin rise
 </button>
@@ -46,78 +64,71 @@
   const audio = new Audio('SSzf-risegoblin.mp3');
   audio.loop = true;
   document.getElementById('playBtn').addEventListener('click', () => {
-    audio.play();
+    audio.play().catch(() => {});
     document.getElementById('playBtn').style.display = 'none';
   });
 </script>
 
 <script>
-  // Goblin Rain Configuration
-  const snowsrc = "femalegoblinfalls.png";
-  const no = 100;
-  let dx = [], xp = [], yp = [], am = [], stx = [], sty = [];
-  let doc_width = window.innerWidth;
-  let doc_height = window.innerHeight;
+  (() => {
+    const goblinCount = 100;
+    const goblins = [];
+    const container = document.body;
+    const imgSrc = 'femalegoblinfalls.png';
 
-  function iecompattest() {
-    return (document.compatMode && document.compatMode !== "BackCompat") ? document.documentElement : document.body;
-  }
+    let viewportWidth = window.innerWidth;
+    let viewportHeight = window.innerHeight;
 
-  function initSnow() {
-    doc_width = window.innerWidth || iecompattest().clientWidth;
-    doc_height = window.innerHeight || iecompattest().clientHeight;
+    for (let i = 0; i < goblinCount; i++) {
+      const gob = document.createElement('img');
+      gob.src = imgSrc;
+      gob.alt = "Drgoblin falling through darkness";
+      gob.className = 'goblin';
 
-    for (let i = 0; i < no; ++i) {
-      dx[i] = 0;
-      xp[i] = Math.random() * (doc_width - 50);
-      yp[i] = Math.random() * doc_height;
-      am[i] = Math.random() * 20;
-      stx[i] = 0.02 + Math.random() / 10;
-      sty[i] = 0.7 + Math.random();
+      const spacing = viewportWidth / goblinCount;
+      const baseX = i * spacing;
+      const xOffset = Math.random() * (spacing - 200);
+      const x = Math.max(0, baseX + xOffset - 150);
+      const y = Math.random() * viewportHeight - 100;
 
-      let gob = document.createElement("div");
-      gob.id = "dot" + i;
-      gob.style.position = "absolute";
-      gob.style.zIndex = i;
-      gob.style.visibility = "visible";
-      gob.style.left = xp[i] + "px";
-      gob.style.top = yp[i] + "px";
+      gob.style.left = `${x}px`;
+      gob.style.top = `${y}px`;
+      container.appendChild(gob);
 
-      let img = document.createElement("img");
-      img.src = snowsrc;
-      img.alt = "Falling goblin";
-      img.border = "0";
-      gob.appendChild(img);
-
-      document.body.appendChild(gob);
+      goblins.push({
+        element: gob,
+        x: x,
+        y: y,
+        amplitude: Math.random() * 40,
+        dx: 0,
+        stx: 0.005 + Math.random() / 20,
+        sty: 0.5 + Math.random() * 1.2
+      });
     }
 
-    animateSnow();
-  }
+    function animate() {
+      viewportWidth = window.innerWidth;
+      viewportHeight = window.innerHeight;
 
-  function animateSnow() {
-    doc_width = window.innerWidth || iecompattest().clientWidth;
-    doc_height = window.innerHeight || iecompattest().clientHeight;
+      goblins.forEach(goblin => {
+        goblin.y += goblin.sty;
+        if (goblin.y > viewportHeight + 100) {
+          goblin.y = -200;
+          goblin.stx = 0.005 + Math.random() / 50;
+          goblin.sty = 0.5 + Math.random() * 1.2;
+        }
 
-    for (let i = 0; i < no; ++i) {
-      yp[i] += sty[i];
-      if (yp[i] > doc_height - 50) {
-        xp[i] = Math.random() * (doc_width - am[i] - 30);
-        yp[i] = 0;
-        stx[i] = 0.02 + Math.random() / 10;
-        sty[i] = 0.7 + Math.random();
-      }
-      dx[i] += stx[i];
-      let dot = document.getElementById("dot" + i);
-      if (dot) {
-        dot.style.top = yp[i] + "px";
-        dot.style.left = (xp[i] + am[i] * Math.sin(dx[i])) + "px";
-      }
+        goblin.dx += goblin.stx;
+        const xPos = goblin.x + goblin.amplitude * Math.sin(goblin.dx);
+        goblin.element.style.left = `${xPos}px`;
+        goblin.element.style.top = `${goblin.y}px`;
+      });
+
+      requestAnimationFrame(animate);
     }
-    setTimeout(animateSnow, 10);
-  }
 
-  window.onload = initSnow;
+    window.addEventListener('load', animate);
+  })();
 </script>
 
 </body>
