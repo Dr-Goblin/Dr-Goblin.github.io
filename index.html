@@ -1,7 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Even the Drgoblin falls</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Even the Drgoblin Falls - Official Drgoblin's Domain</title>
+  <meta name="description" content="Welcome to Drgoblin's Domain. Experience the dark magic with falling goblins, immersive sound, and unique visuals." />
+  <meta name="robots" content="index, follow" />
   <style>
     html, body {
       margin: 0;
@@ -9,30 +13,32 @@
       overflow: hidden;
       background: url('goblinback.jpg') no-repeat center center fixed;
       background-size: cover;
+      font-family: Verdana, Arial, Helvetica, sans-serif;
+      color: #fff;
+    }
+    #playBtn {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 9999;
+      padding: 5px 10px;
+      font-size: 25px;
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
 
 <!-- /*********************************************************************
-*Why are you looking at my page, fuck off, this is Drgoblin's Domain.*
-
-Snow Effect Script- By your mum
+* Why are you looking at my page, fuck off, this is Drgoblin's Domain. *
+* Snow Effect Script - By your mum                                       *
 *********************************************************************/ -->
 
-<button id="playBtn" style="
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  z-index: 9999;
-  padding: 5px 10px;
-  font-size: 25px;
-  background: rgba(0,0,0,0.7);
-  color: #fff;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-">
+<button id="playBtn" aria-label="Play Drgoblin's Rise Sound">
   Click HERE to make Drgoblin rise
 </button>
 
@@ -44,87 +50,75 @@ Snow Effect Script- By your mum
     document.getElementById('playBtn').style.display = 'none';
   });
 </script>
-  
-  <!-- Old Embedded Music -->
-  <!-- <audio src="SSzf-risegoblin.mp3" autoplay loop hidden></audio> -->
 
-  <script>
-    // ✦ Goblin Rain Configuration ✦
-    var snowsrc = "femalegoblinfalls.png";
-    var no = 100;
-    var hidesnowtime = 0;
-    var snowdistance = "pageheight";
+<script>
+  // Goblin Rain Configuration
+  const snowsrc = "femalegoblinfalls.png";
+  const no = 100;
+  let dx = [], xp = [], yp = [], am = [], stx = [], sty = [];
+  let doc_width = window.innerWidth;
+  let doc_height = window.innerHeight;
 
-    var dx = [], xp = [], yp = [], am = [], stx = [], sty = [];
-    var doc_width = 800, doc_height = 600;
+  function iecompattest() {
+    return (document.compatMode && document.compatMode !== "BackCompat") ? document.documentElement : document.body;
+  }
 
-    function iecompattest() {
-      return (document.compatMode && document.compatMode !== "BackCompat") ? document.documentElement : document.body;
+  function initSnow() {
+    doc_width = window.innerWidth || iecompattest().clientWidth;
+    doc_height = window.innerHeight || iecompattest().clientHeight;
+
+    for (let i = 0; i < no; ++i) {
+      dx[i] = 0;
+      xp[i] = Math.random() * (doc_width - 50);
+      yp[i] = Math.random() * doc_height;
+      am[i] = Math.random() * 20;
+      stx[i] = 0.02 + Math.random() / 10;
+      sty[i] = 0.7 + Math.random();
+
+      let gob = document.createElement("div");
+      gob.id = "dot" + i;
+      gob.style.position = "absolute";
+      gob.style.zIndex = i;
+      gob.style.visibility = "visible";
+      gob.style.left = xp[i] + "px";
+      gob.style.top = yp[i] + "px";
+
+      let img = document.createElement("img");
+      img.src = snowsrc;
+      img.alt = "Falling goblin";
+      img.border = "0";
+      gob.appendChild(img);
+
+      document.body.appendChild(gob);
     }
 
-    function initSnow() {
-      doc_width = window.innerWidth || iecompattest().clientWidth;
-      doc_height = window.innerHeight || iecompattest().clientHeight;
+    animateSnow();
+  }
 
-      for (let i = 0; i < no; ++i) {
-        dx[i] = 0;
-        xp[i] = Math.random() * (doc_width - 50);
-        yp[i] = Math.random() * doc_height;
-        am[i] = Math.random() * 20;
+  function animateSnow() {
+    doc_width = window.innerWidth || iecompattest().clientWidth;
+    doc_height = window.innerHeight || iecompattest().clientHeight;
+
+    for (let i = 0; i < no; ++i) {
+      yp[i] += sty[i];
+      if (yp[i] > doc_height - 50) {
+        xp[i] = Math.random() * (doc_width - am[i] - 30);
+        yp[i] = 0;
         stx[i] = 0.02 + Math.random() / 10;
         sty[i] = 0.7 + Math.random();
-
-        let gob = document.createElement("div");
-        gob.id = "dot" + i;
-        gob.style.position = "absolute";
-        gob.style.zIndex = i;
-        gob.style.visibility = "visible";
-        gob.style.left = xp[i] + "px";
-        gob.style.top = yp[i] + "px";
-
-        let img = document.createElement("img");
-        img.src = snowsrc;
-        img.border = "0";
-        gob.appendChild(img);
-
-        document.body.appendChild(gob);
       }
-
-      animateSnow();
-      if (hidesnowtime > 0) setTimeout(hidesnow, hidesnowtime * 1000);
-    }
-
-    function animateSnow() {
-      doc_width = window.innerWidth || iecompattest().clientWidth;
-      doc_height = window.innerHeight || iecompattest().clientHeight;
-
-      for (let i = 0; i < no; ++i) {
-        yp[i] += sty[i];
-        if (yp[i] > doc_height - 50) {
-          xp[i] = Math.random() * (doc_width - am[i] - 30);
-          yp[i] = 0;
-          stx[i] = 0.02 + Math.random() / 10;
-          sty[i] = 0.7 + Math.random();
-        }
-        dx[i] += stx[i];
-        let dot = document.getElementById("dot" + i);
-        if (dot) {
-          dot.style.top = yp[i] + "px";
-          dot.style.left = (xp[i] + am[i] * Math.sin(dx[i])) + "px";
-        }
-      }
-      setTimeout(animateSnow, 10);
-    }
-
-    function hidesnow() {
-      for (let i = 0; i < no; i++) {
-        let dot = document.getElementById("dot" + i);
-        if (dot) dot.style.visibility = "hidden";
+      dx[i] += stx[i];
+      let dot = document.getElementById("dot" + i);
+      if (dot) {
+        dot.style.top = yp[i] + "px";
+        dot.style.left = (xp[i] + am[i] * Math.sin(dx[i])) + "px";
       }
     }
+    setTimeout(animateSnow, 10);
+  }
 
-    window.onload = initSnow;
-  </script>
+  window.onload = initSnow;
+</script>
 
 </body>
 </html>
