@@ -29,4 +29,4 @@ This project is provided as-is. Use at your own risk.
 ---
 
 Created by Drgoblin.  
-© 2025 Drgoblin Domain.
+© 2015-2025 Drgoblin.com
